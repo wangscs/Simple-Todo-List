@@ -5,8 +5,9 @@ work related tasks.
 
 Go to localhost:3000/work
 
-## Link
-https://wangscs.github.io/Simple-Todo-List/
+## Images of project
+![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/HomePage.png?raw=true)
+![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/WorkPage.png?raw=true)
 
 ## Technology Used
 
