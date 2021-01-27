@@ -6,8 +6,8 @@ work related tasks.
 Go to localhost:3000/work
 
 ## Images of project
-![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/HomePage.png?raw=true)
-![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/WorkPage.png?raw=true)
+![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/images/HomePage.PNG?raw=true)
+![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/images/WorkPage.PNG?raw=true)
 
 ## Technology Used
 
