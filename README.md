@@ -1,6 +1,9 @@
 # Simple-Todo-List
 A simple todo list that displays the tasks that a user can check off as 
-completed
+completed. If ran on local computer, there is a separate todo list for
+work related tasks.
+
+Go to localhost:3000/work
 
 ## Link
 https://wangscs.github.io/Simple-Todo-List/
@@ -23,3 +26,8 @@ their own todo lists
 like page so users can backtrack what they listed on their todo lists
 * Implement a delete function to delete tasks that were submitted by
 mistake
+* Implement a verification protocol that checks whether task is empty 
+and if so, to not add it to prevent users from creating too many empty
+tasks
+* Implement a button/tab that enables users to switch from the normal
+todo list to the work todo list
