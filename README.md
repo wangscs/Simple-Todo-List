@@ -5,10 +5,6 @@ work related tasks.
 
 Go to localhost:3000/work
 
-## Images of project
-![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/images/HomePage.PNG?raw=true)
-![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/images/WorkPage.PNG?raw=true)
-
 ## Technology Used
 
 #### _Front End_
@@ -19,6 +15,10 @@ Go to localhost:3000/work
 #### _Back End/Server_
 * Express
 * Node
+
+## Images of project
+![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/images/HomePage.PNG?raw=true)
+![alt text](https://github.com/wangscs/Simple-Todo-List/blob/master/images/WorkPage.PNG?raw=true)
 
 ## Notes for the future
 * Implement personalized user so multiple people can log on and view
