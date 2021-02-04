@@ -21,36 +21,32 @@ const itemSchema = {
 const Item = mongoose.model("item", itemSchema);
 
 const item1 = new Item ({
-	name: "Default test item 1"
+	name: "Default item 1"
 });
 
 const item2 = new Item ({
-	name: "Default test item 2"
+	name: "Default item 2"
 });
 
 const item3 = new Item ({
-	name: "Default test item 3"
+	name: "Default item 3"
 });
 
 const defaultItems = [item1, item2, item3];
 
-// Item.insertMany(defaultItems, function(err){
-// 	if(err){
-// 		console.log(err);
-// 	} else {
-// 		console.log("Successfully inserted many items");
-// 	}
-// });
-
-
-
 // Route that returns the homepage of the todo list website
 app.get("/", function(req, res){
 	const day = date.getDate();
-
 	Item.find({}, function(err, foundItems){
-		if(err){
-			console.log(err);
+		if(foundItems.length === 0){
+			Item.insertMany(defaultItems, function(err){
+				if(err){
+					console.log(err);
+				} else {
+					console.log("Successfully inserted default items");
+				}
+			});
+			res.redirect("/");
 		} else {
 			res.render("list", {
 				listTitle: day,
@@ -58,8 +54,6 @@ app.get("/", function(req, res){
 			});
 		}
 	});
-
-	
 });
 
 // Route that returns the work page of the todo list
@@ -76,11 +70,21 @@ app.get("/work", function(req, res){
 app.post("/", function(req, res){
 	const item = req.body.newItem;
 
+	const itemName = new Item ({
+		name: item
+	});
+
 	if(req.body.list === "Work") {
 		workItems.push(item);
 		res.redirect("/work");
 	} else {
-		items.push(item);
+		Item.insertMany(itemName, function(err){
+			if(err){
+				console.log(err);
+			} else {
+				console.log("Successfully inserted item");
+			}
+		});
 		res.redirect("/");
 	}
 });
