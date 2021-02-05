@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
 // Connection to mongoDB
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
 const itemSchema = {
 	name: String
@@ -117,15 +117,26 @@ app.post("/", function(req, res){
  */
 app.post("/delete", function(req, res){
 	const checkedItemID = req.body.checkbox;
+	const listName = req.body.listName;
 
-	Item.findByIdAndRemove(checkedItemID, function(err){
-		if(err){
-			console.log(err);
-		} else {
-			console.log("Successfully deleted item")
-		}
-	});
-	res.redirect("/");
+	if(listName === "Today"){
+		Item.findByIdAndUpdate(checkedItemID, function(err){
+			if(err){
+				console.log(err);
+			} else {
+				console.log("Successfully deleted item")
+			}
+		});
+		res.redirect("/");
+	} else {
+		List.findOneAndUpdate({name: listName},	{$pull: {items: {_id: checkedItemID}}},	function(err, foundList){
+			if(!err){
+				res.redirect("/" + listName);
+			} else {
+				console.log(err);
+			}
+		});
+	}
 });
 
 app.listen(3000, function(){
