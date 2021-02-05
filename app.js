@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
 // Connection to mongoDB
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+mongoose.connect("mongodb+srv://admin-steven:stevenwang1@todolist.whq4d.mongodb.net/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
 const itemSchema = {
 	name: String
@@ -121,11 +121,11 @@ app.post("/delete", function(req, res){
 	const listName = req.body.listName;
 
 	if(listName === "Today"){
-		Item.findByIdAndUpdate(checkedItemID, function(err){
+		Item.findByIdAndRemove(checkedItemID, function(err){
 			if(err){
 				console.log(err);
 			} else {
-				console.log("Successfully deleted item")
+				console.log("Successfully deleted item");
 			}
 		});
 		res.redirect("/");
