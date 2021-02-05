@@ -1,13 +1,11 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const date = require(__dirname + "/date.js");
 const mongoose = require("mongoose");
 
 const app = express();
 
 app.set("view engine", "ejs");
-
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
@@ -17,34 +15,31 @@ mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true,
 const itemSchema = {
 	name: String
 }
-
 const Item = mongoose.model("item", itemSchema);
-
-const item1 = new Item ({
-	name: "Welcome to my todolist"
-});
-
-const item2 = new Item ({
-	name: "Enter todo task in new item"
-});
-
-const item3 = new Item ({
-	name: "Press checkmark to delete task"
-});
-
-const defaultItems = [item1, item2, item3];
 
 const listSchema = {
 	name: String,
 	items: [itemSchema]
 }
-
 const List = mongoose.model("list", listSchema);
 
+const item1 = new Item ({
+	name: "Welcome to my todolist"
+});
+const item2 = new Item ({
+	name: "Enter todo task in new item"
+});
+const item3 = new Item ({
+	name: "Press checkmark to delete task"
+});
+const defaultItems = [item1, item2, item3];
 
-// Route that returns the homepage of the todo list website
+/**
+ * Get route method that retrieves the home page from server,
+ * Uses current date as title and inserts default items if
+ * the list is empty
+ */
 app.get("/", function(req, res){
-	const day = date.getDate();
 	Item.find({}, function(err, foundItems){
 		if(foundItems.length === 0){
 			Item.insertMany(defaultItems, function(err){
@@ -57,7 +52,7 @@ app.get("/", function(req, res){
 			res.redirect("/");
 		} else {
 			res.render("list", {
-				listTitle: day,
+				listTitle: "Today",
 				newListItems: foundItems,
 			});
 		}
@@ -70,7 +65,6 @@ app.get("/", function(req, res){
  * otherwise, retrieve and render that existing list
  */
 app.get("/:customListName", function(req, res){
-	// Access req.params.paramsName
 	const customListName = req.params.customListName;
 
 	List.findOne({name: customListName}, function(err, foundList){
@@ -93,10 +87,10 @@ app.get("/:customListName", function(req, res){
 	});
 });
 
-
-/*  Appends new todo item into specified array and 
-		redirects user to the appropriate todo list
-*/
+/**
+ * Appends new todo item into specified list and 
+ * redirects user to the appropriate todo list 
+ */
 app.post("/", function(req, res){
 	const itemName = req.body.newItem;
 	const listName = req.body.list;
@@ -105,9 +99,7 @@ app.post("/", function(req, res){
 		name: itemName
 	});
 
-	const day = date.getDate();
-	
-	if(listName === day){
+	if(listName === "Today"){
 		item.save();
 		res.redirect("/");
 	} else {
@@ -117,25 +109,12 @@ app.post("/", function(req, res){
 			res.redirect("/" + listName);
 		});
 	}
-	
-	item.save();
-	res.redirect("/");
-
-	if(req.body.list === "Work") {
-		workItems.push(item);
-		res.redirect("/work");
-	} else {
-		Item.insertMany(itemName, function(err){
-			if(err){
-				console.log(err);
-			} else {
-				console.log("Successfully inserted item");
-			}
-		});
-		res.redirect("/");
-	}
 });
 
+/**
+ * Delete route method that removes items from specified list in
+ * db after user has checked them off
+ */
 app.post("/delete", function(req, res){
 	const checkedItemID = req.body.checkbox;
 
