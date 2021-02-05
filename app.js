@@ -34,6 +34,14 @@ const item3 = new Item ({
 
 const defaultItems = [item1, item2, item3];
 
+const listSchema = {
+	name: String,
+	items: [itemSchema]
+}
+
+const List = mongoose.model("list", listSchema);
+
+
 // Route that returns the homepage of the todo list website
 app.get("/", function(req, res){
 	const day = date.getDate();
@@ -56,23 +64,62 @@ app.get("/", function(req, res){
 	});
 });
 
-// Route that returns the work page of the todo list
-app.get("/work", function(req, res){
-	res.render("list", {
-		listTitle: "Work List",
-		newListItems: workItems,
-	})
+/** 
+ * Get route method that searches for a list in DB,
+ * if no list exists, create a new list with param name
+ * otherwise, retrieve and render that existing list
+ */
+app.get("/:customListName", function(req, res){
+	// Access req.params.paramsName
+	const customListName = req.params.customListName;
+
+	List.findOne({name: customListName}, function(err, foundList){
+		if(!err){
+			if(!foundList){
+				// Create a new list
+				const list = new List({
+					name: customListName,
+					items: defaultItems
+				});
+				list.save();
+				res.redirect("/" + customListName)
+			} else {
+				res.render("list", {
+					listTitle: foundList.name,
+					newListItems: foundList.items
+				});
+			}
+		}
+	});
 });
+
 
 /*  Appends new todo item into specified array and 
 		redirects user to the appropriate todo list
 */
 app.post("/", function(req, res){
-	const item = req.body.newItem;
+	const itemName = req.body.newItem;
+	const listName = req.body.list;
 
-	const itemName = new Item ({
-		name: item
+	const item = new Item ({
+		name: itemName
 	});
+
+	const day = date.getDate();
+	
+	if(listName === day){
+		item.save();
+		res.redirect("/");
+	} else {
+		List.findOne({name: listName}, function(err, foundList){
+			foundList.items.push(item);
+			foundList.save();
+			res.redirect("/" + listName);
+		});
+	}
+	
+	item.save();
+	res.redirect("/");
 
 	if(req.body.list === "Work") {
 		workItems.push(item);
